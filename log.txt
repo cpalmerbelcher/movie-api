@@ -1,6 +1,0 @@
-URL: /index.html
-Timestamp: Fri Sep 03 2021 10:51:44 GMT-0400 (Eastern Daylight Time)
-
-URL: /favicon.ico
-Timestamp: Fri Sep 03 2021 10:51:44 GMT-0400 (Eastern Daylight Time)
-
