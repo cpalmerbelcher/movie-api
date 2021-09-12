@@ -54,7 +54,7 @@ let movies = [
   });
   
   app.get('/movies', (req, res) => {
-    res.json(topBooks);
+    res.json(movies);
   });
 
   app.use('/movies', express.static('public'));
