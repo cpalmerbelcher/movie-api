@@ -1,5 +1,12 @@
-const express = require('express');
+const express = require('express'),
+    morgan = require('morgan');
+
 const app = express();
+
+let myLogger = (req, res, next) => {
+  console.log(req.url);
+  next();
+};
 
 let movies = [
     {
@@ -45,6 +52,10 @@ let movies = [
   ];
   
   // GET requests
+  app.use(myLogger);
+  
+  app.use(morgan('common'));
+
   app.get('/', (req, res) => {
     res.send('Welcome!');
   });
