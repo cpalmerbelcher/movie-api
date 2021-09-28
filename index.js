@@ -1,6 +1,17 @@
 const express = require('express'),
+const bodyParser = require('body-parser');
+
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
    
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 const morgan = require('morgan');
 
@@ -87,7 +98,7 @@ app.get('/', (req, res) => {
 
   app.use('/movies', express.static('public'));
   
-  // GET requests for all users
+  // GET all users
   app.get('/users', (req, res) => {
     Users.find()
     .then((users) => {
@@ -99,7 +110,27 @@ app.get('/', (req, res) => {
     });
   });
 
+  // GET user by name
+  app.get('/users/:Username', (req, res) => {
+    Users.findOne({ Username: req.params.Username})
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error:' + err);
+    });
+  });
+
   // Add a new user
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
   app.post('/users', [
     check('Name', 'Username is required').isLength({min: 5}),
     check('Name', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
@@ -158,6 +189,22 @@ app.get('/', (req, res) => {
     });
   });
 
+// Add a movie to a user's list of favorites
+    app.post('/users/:Name/movies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Users.findOneAndUpdate({Name: req.params.Name}, {
+      $push: {FavoriteMovies: req.params.MovieID}
+    },
+    {new: true},
+    (err, updatedUser) => {
+      if(err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+  });
+
   // Delete a user by their username
   app.delete('/users/:Name', passport.authenticate('jwt', {session: false}), (req, res) => {
     Users.findOneAndRemove({Name: req.params.Name})
@@ -171,22 +218,6 @@ app.get('/', (req, res) => {
     .catch((err) => {
       console.error(err);
       res.status(500).send('Error: ' + err);
-    });
-  });
-
-  // Add a movie to the favorite list of an user
-  app.post('/users/:Name/movies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
-    Users.findOneAndUpdate({Name: req.params.Name}, {
-      $push: {FavoriteMovies: req.params.MovieID}
-    },
-    {new: true},
-    (err, updatedUser) => {
-      if(err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
     });
   });
 
