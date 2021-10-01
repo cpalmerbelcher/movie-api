@@ -11,6 +11,7 @@
     <body>
         <h1>Documentation Page</h1>
         <p>Welcome!</p>
+
         <table>
             <thead>
                 <tr>
@@ -38,7 +39,6 @@
                     <td>A JSON object holding data about a single movie,<br>
                     Example:<br>
                     {<br>
-                        id: 61522caf249094f6802a646c,<br>
                         Title: "Panic Room",<br>
                         Description: "A divorced woman and her diabetic daughter take refuge in their newly-purchased houses safe room, when three men break-in, searching for a missing fortune.",<br> 
                         Genre: { "Name" : "Thriller", "Description" : "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience." },<br> 
@@ -83,7 +83,7 @@
 
                 <tr>
                     <td>Get data about a single user by name</td>
-                    <td>/user/[Name]</td>
+                    <td>/user/[Username]</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>A JSON object holding data about a single user,<br>
@@ -104,7 +104,7 @@
                     <td>A JSON object holding data about the user to add,<br>
                         Example:<br>
                         {<br>
-                            Name: "Travis4",<br>
+                            Username: "Travis4",<br>
                             Password: "password4",<br>
                             Mail: "travis4@gmail.com"<br>
                         }
@@ -112,18 +112,17 @@
                     <td>A JSON object holding data about the user to add,<br>
                         Example:<br>
                         {<br>
-                          Name: "Travis4",<br>
-                          Password: "password4",<br>
-                          Mail: "travis4@gmail.com",<br>
-                          "Birthday": "1990/05/17",<br>
-                          __v: 0<br>
+                            Username: "Travis4",<br>
+                            Password: "password4",<br>
+                            Mail: "travis4@gmail.com",<br>
+                            Birthday: "1990/05/17",<br>
                         }
                       </td>
                 </tr>
 
                 <tr>
                     <td>Add a movie to user favorite list</td>
-                    <td>/users/[Name]/movies/[MovieID]</td>
+                    <td>/users/[Username]/movies/[MovieID]</td>
                     <td>POST</td>
                     <td>None</td>
                     <td>A JSON file with MovieID as value of FavoriteMovies key,<br>
@@ -140,7 +139,7 @@
 
                 <tr>
                     <td>Update a certain user</td>
-                    <td>/users/[Name]</td>
+                    <td>/users/[Username]</td>
                     <td>PUT</td>
                     <td>None</td>
                     <td>A text message indicating whether the user was updated</td>
@@ -148,7 +147,7 @@
 
                 <tr>
                     <td>Delete a user</td>
-                    <td>/movies/[Name]</td>
+                    <td>/movies/[Username]</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>A text message indicating whether the user was successfully removed</td>
@@ -156,7 +155,7 @@
 
                 <tr>
                     <td>Remove a movie by ID from the FavoriteMovies of a user</td>
-                    <td>/users/[Name]/movies/[MovieID]</td>
+                    <td>/users/[Username]/movies/[MovieID]</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>A text message indicating whether the movie was successfully removed</td>
