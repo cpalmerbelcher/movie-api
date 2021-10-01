@@ -1,19 +1,20 @@
 const express = require('express'),
-const bodyParser = require('body-parser');
-
-const mongoose = require('mongoose');
+const morgan = require("morgan"),
+const bodyParser = require('body-parser'),
+const mongoose = require('mongoose'),
 const Models = require('./models.js');
 
 const Movies = Models.Movie;
 const Users = Models.User;
+const Directors = Models.Director;
+const Genre = Models.Genre;
 
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
    
 const app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-const morgan = require('morgan');
 
 let myLogger = (req, res, next) => {
   console.log(req.url);
@@ -22,49 +23,6 @@ let myLogger = (req, res, next) => {
 
 app.use(myLogger);
 app.use(morgan('common'));
-
-let movies = [
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-    {
-      title: 'movie name',
-      director: 'name'
-    },
-  ];
 
   // Welcome message
 app.get('/', (req, res) => {
@@ -82,7 +40,6 @@ app.get('/', (req, res) => {
       res.status(500).send('Error: ', err);
     });
   });
-
 
   // GET a list of all movies
   app.get('/movies', passport.authenticate('jwt', {session: false}), (req.res) => {

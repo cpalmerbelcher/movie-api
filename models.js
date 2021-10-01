@@ -26,6 +26,10 @@ let userSchema = mongoose.Schema({
 
 let Movie = mongoose.model('Movie', movieSchema);
 let User = mongoose.model('User', userSchema);
+let Director = mongoose.model("Director", directorSchema);
+let Genre = mongoose.model("Genre", genreSchema);
 
 module.exports.Movie = Movie;
 module.exports.User = User;
+module.exports.Director = Director;
+module.exports.Genre = Genre;
