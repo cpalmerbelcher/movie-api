@@ -1,0 +1,5 @@
+{"_id":{"$oid":"6153c503a9f573a231e1f273"},"user":"Travis4","pwd":"password4","customData":{"FavoriteMovies":"61531b0091555e5f90b0b559"},"roles":[]}
+{"_id":{"$oid":"6153c995865f67366fb21e93"},"user":"Emily1","pwd":"password1","customData":{"FavoriteMovies":"61531b2291555e5f90b0b55c"},"roles":[]}
+{"_id":{"$oid":"6153c99b865f67366fb21e94"},"user":"Mark2","pwd":"password2","customData":{"FavoriteMovies":"61531b1691555e5f90b0b55b"},"roles":[]}
+{"_id":{"$oid":"6153c9a2865f67366fb21e95"},"user":"Kelly3","pwd":"password3","customData":{"FavoriteMovies":"61531af591555e5f90b0b558"},"roles":[]}
+{"_id":{"$oid":"6153c9ae865f67366fb21e96"},"user":"Rick5","pwd":"password5","customData":{"FavoriteMovies":"61531b0091555e5f90b0b559"},"roles":[],"61531ab991555e5f90b0b554":1.0}
