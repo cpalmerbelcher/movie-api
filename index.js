@@ -1,8 +1,8 @@
 const express = require('express');
+const morgan = require("morgan");
 const bodyParser = require('body-parser');
 // const uuid = require('uuid');
 
-const morgan = require("morgan");
 const app = express();
 const mongoose = require('mongoose');
 const Models = require('./models.js');
@@ -12,10 +12,14 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Directors;
 
+//conntecting database with connection URI
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
    
+//activating body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//calling express
 app.use(express.json());
 
 let myLogger = (req, res, next) => {
@@ -31,7 +35,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to MyFlix!');
 });
 
-  //return JSON object when at /movies
+  //get list of all movies
   app.get('/movies', (req, res) => {
     Movies.find()
       .then((movies) => {
@@ -43,7 +47,7 @@ app.get('/', (req, res) => {
       });
   });
 
-  // GET requests for a specific movies
+  // GET requests for a specific movie by title
   app.get('/movies/:Title', (req, res) => {
     Movies.findOne({Title: req.params.Title})
     .then((movie) => {
@@ -55,7 +59,19 @@ app.get('/', (req, res) => {
     });
   });
 
-  //get genre info when looking for a specific genre
+  //Get a list of all genres
+  app.get('/genre', (req, res) => {
+      Genre.find()
+        .then(genre => {
+          res.status(201).json(genre);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Error: ' + err);
+        });
+    });
+
+  //get a specific genre by name
   app.get('/genre/:Name', (req, res) => {
     Genres.findOne({ Name: req.params.Name})
     .then((genre) => {
@@ -67,7 +83,19 @@ app.get('/', (req, res) => {
     });
   });
 
-  //get director info when looking for a specific director
+  //get list of all directors
+  app.get('/directors', (req, res) => {
+    Directors.find()
+      .then((director) => {
+        res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+
+  //get director info by name
   app.get('/director/:Name', (req, res) =>{
     Directors.findOne({ Name: req.params.Name})
     .then((director) => {
@@ -79,7 +107,7 @@ app.get('/', (req, res) => {
     });
   });
 
-  // GET user by name
+  //get all users
   app.get('/users', function (req, res) {
     Users.find()
     .then(function (users) {
