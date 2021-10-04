@@ -13,7 +13,8 @@ const Genres = Models.Genre;
 const Directors = Models.Directors;
 
 //conntecting database with connection URI
-mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/myFlixDB', 
+  { useNewUrlParser: true, useUnifiedTopology: true });
    
 //activating body-parser
 app.use(bodyParser.json());
@@ -73,9 +74,9 @@ app.get('/', (req, res) => {
 
   //get a specific genre by name
   app.get('/genre/:Name', (req, res) => {
-    Genres.findOne({ Name: req.params.Name})
+    Movies.findOne({ 'Genre.Name': req.params.Name})
     .then((genre) => {
-      res.json(genre.Description);
+      res.json(genre.Genre);
     })
     .catch((err) => {
       console.error(err);
@@ -85,7 +86,7 @@ app.get('/', (req, res) => {
 
   //get list of all directors
   app.get('/directors', (req, res) => {
-    Directors.find()
+    Movies.find()
       .then((director) => {
         res.status(201).json(movies);
       })
@@ -96,10 +97,10 @@ app.get('/', (req, res) => {
   });
 
   //get director info by name
-  app.get('/director/:Name', (req, res) =>{
-    Directors.findOne({ Name: req.params.Name})
+  app.get('/director/:Name', (req, res) => {
+    Movies.findOne({ 'Director.Name': req.params.Name})
     .then((director) => {
-      res.json(director);
+      res.json(director.Director);
     })
     .catch((err) => {
       console.error(err);
@@ -152,9 +153,9 @@ app.post('/users', (req, res) => {
       {Username: req.params.Username}, 
       {
       $set: {
-        Name: req.body.Name,
+        Username: req.body.Username,
         Password: req.body.Password,
-        Mail: req.body.Mail,
+        Email: req.body.Email,
         Birthday: req.body.Birthday
       },
     },
@@ -177,6 +178,7 @@ app.post('/users', (req, res) => {
     },
     {new: true},
     (err, updatedUser) => {
+      console.log (updatedUser)
       if(err) {
         console.error(err);
         res.status(500).send('Error: ' + err);

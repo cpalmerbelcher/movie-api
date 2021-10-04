@@ -18,7 +18,7 @@ let movieSchema = mongoose.Schema({
     Featured: Boolean
 });
 
-//creating user schema
+//creating userSchema
 let userSchema = mongoose.Schema({
     Username: {type: String, required: true},
     Password: {type: String, required: true},
@@ -33,7 +33,6 @@ userSchema.statics.hashPassword = (password) => {
 };
 
 //adding validatePassword for comparing submitted hashed password with the hashed password in database
-/*!!! DO NOT USE ARROW FUNCTION FOR DEFINING INSTANCE METHODS, e.g: validatePassword !!!*/
 userSchema. methods.validatePassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
