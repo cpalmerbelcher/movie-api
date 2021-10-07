@@ -1,7 +1,12 @@
+const cors = require('cors'); 
+app.use(cors());
+
 const express = require('express');
 const morgan = require("morgan");
 const bodyParser = require('body-parser');
 // const uuid = require('uuid');
+
+const { check, validationResult } = require('express-validator');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -126,10 +131,26 @@ app.get('/', (req, res) => {
   });
 
 //adding a new user
-app.post('/users', (req, res) => {
-  Users.findOne({ Username: req.body.Username })
+app.post('/users', [
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+  ], (req, res) => {
+
+  // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors:errors.array() });
+    }
+
+    let hashedPassword = Users.hashedPassword(req.body.Password);
+    Users.findOne({ Username: req.body.Username })
+  // search to see if a user with the requested username already exists
     .then((user) => {
       if (user) {
+  // if the user is found, send a response that it already exists
         return res.status(400).send(req.body.Username + 'already exists');
       } else {
         Users
@@ -140,17 +161,17 @@ app.post('/users', (req, res) => {
             Birthday: req.body.Birthday
           })
           .then((user) =>{res.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error: ' + error);
-        })
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          })
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            });
+        });
 
   // Update user info by username
   app.put('/users/:Username', (req, res) => {
@@ -232,6 +253,7 @@ app.delete('/users/:Username/movies/:MovieID', (req, res) => {
   });
 
   // listen for requests
-  app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
+  const port = process.env.PORT || 8080;
+  app.listen(port, '0.0.0.0',() => {
+    console.log('Listening on Port' + port);
   });
