@@ -19,7 +19,7 @@ const Directors = Models.Directors;
 
 //conntecting database with connection URI
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', 
-mongoose.connect( process.env.CONNECTION_URL, 
+mongoose.connect( process.env.CONNECTION_URI, 
   { useNewUrlParser: true, useUnifiedTopology: true });
    
 //activating body-parser
