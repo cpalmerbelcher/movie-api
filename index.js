@@ -1,5 +1,4 @@
 const cors = require('cors'); 
-app.use(cors());
 
 const express = require('express');
 const morgan = require("morgan");
@@ -9,6 +8,7 @@ const bodyParser = require('body-parser');
 const { check, validationResult } = require('express-validator');
 
 const app = express();
+app.use(cors());
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
@@ -134,7 +134,7 @@ app.get('/', (req, res) => {
 //adding a new user
 app.post('/users', [
   check('Username', 'Username is required').isLength({min: 5}),
-  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  // check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
   check('Password', 'Password is required').not().isEmpty(),
   check('Email', 'Email does not appear to be valid').isEmail()
   ], (req, res) => {
