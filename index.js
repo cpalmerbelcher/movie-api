@@ -19,7 +19,7 @@ const Directors = Models.Directors;
 
 //conntecting database with connection URI
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', 
-mongoose.connect( process.env.CONNECTION_URI, 
+mongoose.connect( "mongodb+srv://myFlixAppAdmin:AdminFlixpassword@my-flix-application.mcflq.mongodb.net/myFlixDB?retryWrites=true&w=majority", 
   { useNewUrlParser: true, useUnifiedTopology: true });
    
 //activating body-parser
@@ -146,7 +146,7 @@ app.post('/users', [
       return res.status(422).json({ errors:errors.array() });
     }
 
-    let hashedPassword = Users.hashedPassword(req.body.Password);
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username })
   // search to see if a user with the requested username already exists
     .then((user) => {
@@ -157,7 +157,7 @@ app.post('/users', [
         Users
           .create({
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
