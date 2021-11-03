@@ -35,7 +35,7 @@ userSchema.statics.hashPassword = (password) => {
 
 //adding validatePassword for comparing submitted hashed password with the hashed password in database
 userSchema.methods.validatePassword = function(password) {
-    return bcrypt.compareSync(password, this.password);
+    return bcrypt.compareSync(password, this.Password);
 };
 
 //creating genre schema
