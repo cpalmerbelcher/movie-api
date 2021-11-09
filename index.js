@@ -153,6 +153,14 @@ app.post('/users', [
   // Update user info by username
   app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     let hashedPassword = Users.hashPassword(req.body.Password);
+    const token = req.header('authorization').split('')[1];
+    const decodedToken = jwt_decode(token);
+    const loggedInUser = decodedToken.Username;
+
+    if(loggedInUser != req.params.Username){
+      return res.status(400).send("You cannot edit another person's account");
+    }
+
     Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
@@ -184,24 +192,49 @@ app.post('/users', [
 
 // Add a movie to a user's list of favorites
     app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOneAndUpdate({Username: req.params.Username}, 
-    {
-      $push: {FavoriteMovies: req.params.MovieID}
-    },
-    {new: true},
-    (err, updatedUser) => {
-      console.log (updatedUser)
-      if(err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
-    });
+    const token = req.header('authorization').split('')[1];
+    const decodedToken = jwt_decode(token);
+    const loggedInUser = decodedToken.Username;
+
+    if(loggedInUser != req.params.Username){
+      return res.status(400).send("You cannot Add a movie to another person's account");
+    }
+
+    Movies.findOne({MovieID: req.params.MovieID})
+      then((movie) => {
+        if (movie) {
+          // if user is found send a response that it already exists
+          return res.status(400).send('Duplicate Movie in favorite list');
+        } else {
+          Users.findOneAndUpdate({Username: req.params.Username}, 
+            {
+              $push: {FavoriteMovies: req.params.MovieID}
+            },
+            {new: true},
+            (err, updatedUser) => {
+              console.log (updatedUser)
+              if(err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+              } else {
+                res.json(updatedUser);
+              }
+            }
+          );
+        }
+      })
   });
 
   // Delete a user by their username
   app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const token = req.header('authorization').split('')[1];
+    const decodedToken = jwt_decode(token);
+    const loggedInUser = decodedToken.Username;
+
+    if(loggedInUser != req.params.Username){
+      return res.status(400).send("You cannot delete another person's account");
+    }
+
     Users.findOneAndRemove({ Username: req.params.Username})
     .then((user) => {
       if(!user) {
@@ -217,20 +250,28 @@ app.post('/users', [
   });
 
   // Delete a movie from the favorite list of an user
-app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate({Username: req.params.Username}, {
-    $pull: {FavoriteMovies: req.params.MovieID}
-  },
-  {new: true},
-  (err, updatedUser) => {
-    if(err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
+  app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const token = req.header('authorization').split('')[1];
+    const decodedToken = jwt_decode(token);
+    const loggedInUser = decodedToken.Username;
+
+    if(loggedInUser != req.params.Username){
+      return res.status(400).send("You cannot delete a movie from another person's account");
     }
+
+    Users.findOneAndUpdate({Username: req.params.Username}, {
+      $pull: {FavoriteMovies: req.params.MovieID}
+    },
+    {new: true},
+    (err, updatedUser) => {
+      if(err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
   });
-});
 
   // Error handler
   app.use((err, req, res, next) => {
