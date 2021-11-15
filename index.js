@@ -273,6 +273,25 @@ app.post('/users', [
     });
   });
 
+  // return user profile
+/**
+* This method makes a call to the users endpoint,
+* validates the object sent through the request
+* and returns a user object.
+* @method addUser
+* @param {string} usersEndpoint 
+* @param {Array} expressValidator - Validate form input using the express-validator package.
+* @param {func} callback - Uses Users schema to register user.
+ */
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.findOne({ Username: req.params.Username }).then((user) => {
+    res.status(201).json(user);
+  }).catch((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
+});
+
   // Error handler
   app.use((err, req, res, next) => {
     console.log(err.stack);
