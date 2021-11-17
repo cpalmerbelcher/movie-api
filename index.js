@@ -3,6 +3,7 @@ const cors = require('cors');
 const express = require('express');
 const morgan = require("morgan");
 const bodyParser = require('body-parser');
+const jwt_decode = require('jwt-decode');
 // const uuid = require('uuid');
 
 const { check, validationResult } = require('express-validator');
