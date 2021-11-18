@@ -154,7 +154,7 @@ app.post('/users', [
   // Update user info by username
   app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     let hashedPassword = Users.hashPassword(req.body.Password);
-    const token = req.header('authorization').split('')[1];
+    const token = req.header('authorization').split(' ')[1];
     const decodedToken = jwt_decode(token);
     const loggedInUser = decodedToken.Username;
 
@@ -193,7 +193,7 @@ app.post('/users', [
 
 // Add a movie to a user's list of favorites
     app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-    const token = req.header('authorization').split('')[1];
+    const token = req.header('authorization').split(' ')[1];
     const decodedToken = jwt_decode(token);
     const loggedInUser = decodedToken.Username;
 
@@ -228,7 +228,7 @@ app.post('/users', [
 
   // Delete a user by their username
   app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    const token = req.header('authorization').split('')[1];
+    const token = req.header('authorization').split(' ')[1];
     const decodedToken = jwt_decode(token);
     const loggedInUser = decodedToken.Username;
 
@@ -252,7 +252,7 @@ app.post('/users', [
 
   // Delete a movie from the favorite list of an user
   app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-    const token = req.header('authorization').split('')[1];
+    const token = req.header('authorization').split(' ')[1];
     const decodedToken = jwt_decode(token);
     const loggedInUser = decodedToken.Username;
 
